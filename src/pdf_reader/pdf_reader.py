@@ -9,4 +9,4 @@ def extract_text_from_pdf(pdf_file):
 
             if page_text is not None:
                     text += page_text + "\n"
-    return text
+    return text 

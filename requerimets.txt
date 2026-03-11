@@ -1,0 +1,6 @@
+pypdf
+pdfplumber
+langchain
+openai
+streamlit
+numpy

@@ -22,7 +22,7 @@ if uploaded_file is not None:
 
     st.success("PDF cargado correctamente")
 
-    if st.button("Generar resumen"):
+    if st.button("Generar resumen", type="secondary"):
 
         st.info("Procesando documento...")
 

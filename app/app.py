@@ -1,13 +1,13 @@
 import streamlit as st
 import sys
 import os
-import re
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.pdf_reader.pdf_reader import extract_text_from_pdf
 from src.text_processing.text_chunker import fixed_chunking
-from src.summarizer.summarizer import summarize_half, summarize_quarter
+from src.summarizer.summarizer import summarize_half, summarize_quarter, final_summary
 
 
 st.set_page_config(
@@ -46,13 +46,13 @@ def quarter_summarizer(chunks):
 
     return summaries
 
-def final_summaries(summaries):
+def final_summaries(summaries, size):
 
-    final_summary = "\n".join(summaries)
+    final_text = final_summary(summaries, size)
 
-    st.subheader("Resumen generado")
+    st.success("Resumen generado correctamente.")
 
-    st.write(final_summary)
+    st.write(final_text)
 
 
 uploaded_file = st.file_uploader(
@@ -62,14 +62,14 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    st.success("PDF cargado correctamente")
+    st.success("PDF cargado correctamente.")
 
     if st.button("Generar resumen 50%"):
         chunks = chunking(uploaded_file)
         summaries = half_summarizer(chunks)
-        final_summaries(summaries)
+        final_summaries(summaries,260)
 
     if st.button("Generar resumen 25%"):
         chunks = chunking(uploaded_file)
         summaries = quarter_summarizer(chunks)
-        final_summaries(summaries)
+        final_summaries(summaries,130)

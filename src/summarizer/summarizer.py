@@ -1,6 +1,32 @@
 import ollama 
 import re
 
+def final_summary(chunk_summaries,size):
+
+    combined = "\n".join(chunk_summaries)
+
+    prompt = f"""
+    A continuación hay varios resúmenes parciales de un documento.
+
+    Crea un único resumen en español, claro y coherente del documento completo
+    en un aproximado de {size*len(chunk_summaries)} palabras.
+
+    Resúmenes:
+    {combined}
+    """
+
+    response = ollama.generate(
+        model="llama3",
+        prompt=prompt
+    )
+
+    final_response = response["response"]
+
+    final_response = re.sub(r"Aquí te presento.*?:", "", final_response)
+    final_response = re.sub(r"A continuación.*?:", "", final_response)
+
+    return final_response
+
 def summarize_half(chunks):
 
     summaries = []
@@ -8,7 +34,7 @@ def summarize_half(chunks):
     for chunk in chunks:
 
         prompt = f'''
-        Resume el siguiente texto en español en máximo 80 palabras.
+        Resume el siguiente texto en español en un aproximado de 260 palabras.
 
         Reglas:
         - Solo escribe el resumen.
@@ -41,7 +67,7 @@ def summarize_quarter(chunks):
     for chunk in chunks:
 
         prompt = f'''
-        Resume el siguiente texto en español en máximo 40 palabras.
+        Resume el siguiente texto en español en un aproximado de 130 palabras.
 
         Reglas:
         - Solo escribe el resumen.
@@ -62,6 +88,8 @@ def summarize_quarter(chunks):
 
         summary = re.sub(r"Aquí te presento.*?:", "", summary)
         summary = re.sub(r"A continuación.*?:", "", summary)
+        summary = re.sub(r"Resumen.*?:", "", summary)
+        summary = re.sub(r"Resumen:.*?:", "", summary)
 
         summaries.append(summary.strip())
 
